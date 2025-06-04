@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Page 1 - DX Web SDK テスト</title>
+
+    <script src="https://assets.adobedtm.com/ff8e968de530/f46fa7a20ce5/launch-7aa5194436d4.min.js" async></script>
+</head>
+
+<body>
+    <header>
+        <h1>Page 1 - DX Web SDK テストページ</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html#section-intro">イントロダクション</a></li>
+                <li><a href="index.html#section-sdk-demo">SDK デモ</a></li>
+                <li><a href="index.html#section-pageview">ページビュー送信</a></li>
+                <li><a href="index.html#section-scroll-demo">スクロール深度</a></li>
+                <li><a href="index.html#section-footer">フッター</a></li>
+            </ul>
+        </nav>
+        <div class="page-navigation">
+            <!-- ページ間ナビゲーション（Home, Page 2, Page 3）-->
+            <button onclick="handleNavigation('index.html','Home')">Home</button>
+            <button onclick="handleNavigation('page2.html','Page 2')">Page 2</button>
+            <button onclick="handleNavigation('page3.html','Page 3')">Page 3</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- イントロダクション -->
+        <section id="section-intro">
+            <h2>このページについて (Page 1)</h2>
+            <p>
+                これは Page 1 の DX Web SDK テストページです。
+                内容はホームと同じで、他ページへの遷移ボタンが追加されています。
+            </p>
+        </section>
+
+        <!-- SDK デモ -->
+        <section id="section-sdk-demo">
+            <h2>SDK デモ</h2>
+            <div class="demo-block">
+                <h3>オファー取得ボタン</h3>
+                <button id="getOfferButton">オファーを取得する</button>
+            </div>
+            <div class="demo-block">
+                <h3>カスタムイベント送信</h3>
+                <form id="eventForm">
+                    <label for="eventName">イベント名：</label>
+                    <input type="text" id="eventName" name="eventName" placeholder="例: purchase" />
+                    <label for="eventValue">値：</label>
+                    <input type="text" id="eventValue" name="eventValue" placeholder="例: 1000" />
+                    <button type="submit">イベントを送信</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ページビュー送信 -->
+        <section id="section-pageview">
+            <h2>ページビュー送信</h2>
+            <button id="sendPageViewButton">ページビューを送信</button>
+        </section>
+
+        <!-- スクロール深度トラッキング -->
+        <section id="section-scroll-demo">
+            <h2>スクロール深度トラッキング</h2>
+            <p>ページをスクロールすると、50% 以上スクロールしたときにイベントを送信します。</p>
+            <div style="height:1500px; background:linear-gradient(white, lightgray);"></div>
+        </section>
+    </main>
+
+    <footer id="section-footer">
+        <p>&copy; 2025 Your Company Name</p>
+    </footer>
+
+    <!-- 結果表示用 -->
+    <pre id="resultLog" style="background:#f0f0f0; padding: 1em;"></pre>
+
+    <script>
+        function handleNavigation(url, linkName) {
+            if (window.alloy) {
+                window.alloy("sendEvent", {
+                    xdm: {
+                        eventType: "web.webinteraction.linkClicks",
+                        web: { webInteraction: { name: linkName } },
+                        event: { type: "linkClick", url: url }
+                    }
+                })
+                    .then(function () {
+                        window.location.href = url;
+                    })
+                    .catch(function () {
+                        window.location.href = url;
+                    });
+            } else {
+                window.location.href = url;
+            }
+        }
+
+        (function () {
+            const resultLog = document.getElementById("resultLog");
+
+            // オファー取得
+            const getOfferButton = document.getElementById("getOfferButton");
+            getOfferButton.addEventListener("click", function () {
+                if (window.alloy) {
+                    window.alloy("sendEvent", {
+                        xdm: { eventType: "personalization.request" },
+                        renderDecisions: true
+                    })
+                        .then(response => {
+                            resultLog.textContent = JSON.stringify(response, null, 2);
+                        })
+                        .catch(err => {
+                            resultLog.textContent = "エラーが発生しました:\n" + err;
+                        });
+                } else {
+                    resultLog.textContent = "alloy が読み込まれていません。";
+                }
+            });
+
+            // カスタムイベント送信
+            const eventForm = document.getElementById("eventForm");
+            eventForm.addEventListener("submit", function (e) {
+                e.preventDefault();
+                const name = document.getElementById("eventName").value;
+                const value = document.getElementById("eventValue").value;
+                if (window.alloy) {
+                    window.alloy("sendEvent", {
+                        xdm: { eventType: name, eventValue: value }
+                    })
+                        .then(response => {
+                            resultLog.textContent = "イベント送信成功:\n" + JSON.stringify(response, null, 2);
+                        })
+                        .catch(err => {
+                            resultLog.textContent = "イベント送信エラー:\n" + err;
+                        });
+                } else {
+                    resultLog.textContent = "alloy が読み込まれていません。";
+                }
+            });
+
+            // ページビュー送信
+            const sendPageViewButton = document.getElementById("sendPageViewButton");
+            sendPageViewButton.addEventListener("click", function () {
+                if (window.alloy) {
+                    window.alloy("sendEvent", {
+                        xdm: { eventType: "web.webpagedetails.pageViews" }
+                    })
+                        .then(response => {
+                            resultLog.textContent = "ページビュー送信成功:\n" + JSON.stringify(response, null, 2);
+                        })
+                        .catch(err => {
+                            resultLog.textContent = "ページビュー送信エラー:\n" + err;
+                        });
+                } else {
+                    resultLog.textContent = "alloy が読み込まれていません。";
+                }
+            });
+
+            // スクロール深度トラッキング
+            let scrollTracked = false;
+            window.addEventListener("scroll", function () {
+                if (scrollTracked) return;
+                const scrollTop = window.scrollY || window.pageYOffset;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPercent = (scrollTop / docHeight) * 100;
+                if (scrollPercent >= 50) {
+                    scrollTracked = true;
+                    if (window.alloy) {
+                        window.alloy("sendEvent", {
+                            xdm: {
+                                eventType: "web.webinteraction.scrollDepth",
+                                web: { webInteraction: { name: "ScrollDepth50" } },
+                                eventTypeDetails: { scrollDepthThreshold: 50 }
+                            }
+                        })
+                            .then(response => {
+                                resultLog.textContent = "スクロール深度イベント送信成功:\n" + JSON.stringify(response, null, 2);
+                            })
+                            .catch(err => {
+                                resultLog.textContent = "スクロール深度イベント送信エラー:\n" + err;
+                            });
+                    } else {
+                        resultLog.textContent = "alloy が読み込まれていません。";
+                    }
+                }
+            });
+        })();
+    </script>
+</body>
+
+</html>
