@@ -1,5 +1,6 @@
 alloy("configure", {
   edgeConfigId: "f02971c1-8486-4544-9363-73dd8bd0e716"
+  propertyId: "PR9c5c1a09efcf42958a296a5df1561e25" 
 });
 
 document.getElementById("checkFpid").addEventListener("click", async () => {
