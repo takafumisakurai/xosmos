@@ -1,22 +1,21 @@
 <!DOCTYPE html>
 <html lang="ja">
-
 <head>
-    <meta charset="UTF-8">
-    <script src="https://assets.adobedtm.com/ff8e968de530/f46fa7a20ce5/launch-7aa5194436d4.min.js" async></script>
-    <title>FPID Validator</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <!-- Adobe Launch タグ（既にお持ちのもの） -->
+  <script src="https://assets.adobedtm.com/ff8e968de530/f46fa7a20ce5/launch-7aa5194436d4.min.js" async></script>
+  <title>FPID Validator</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
-    <h1>Adobe Web SDK FPID 検証サイト</h1>
-    <p>以下のボタンを押すと、生成された FPID を表示します。</p>
-    <button id="checkFpid">FPID を取得</button>
-    <pre id="result">-- ここに結果が表示されます --</pre>
+  <h1>Adobe Web SDK FPID 検証サイト</h1>
+  <p>以下のボタンを押すと、生成された FPID を表示します。</p>
+  <button id="checkFpid">FPID を取得</button>
+  <pre id="result">-- ここに結果が表示されます --</pre>
 
-    <!-- Adobe Web SDK（Alloy）CDN  -->
-    <script src="https://cdn.jsdelivr.net/npm/@adobe/alloy@latest/dist/alloy.min.js"></script>
-    <script src="js/app.js"></script>
+  <!-- Alloy Web SDK の読み込み -->
+  <script src="https://cdn.jsdelivr.net/npm/@adobe/alloy@latest/dist/alloy.min.js"></script>
+  <!-- 自作スクリプト -->
+  <script src="js/app.js"></script>
 </body>
-
 </html>
