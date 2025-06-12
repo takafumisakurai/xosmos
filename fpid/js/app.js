@@ -44,7 +44,7 @@ setCookie(cookieName, fpid, 30 * 13);
 
 // === 2. Alloy の設定・呼び出し ===
 alloy("configure", {
-  datastreamId: datastreamId,
+  datastreamId: "f02971c1-8486-4544-9363-73dd8bd0e716",
   orgId:        "709F1DFC5B75373A0A495C41@AdobeOrg"
 });
 
