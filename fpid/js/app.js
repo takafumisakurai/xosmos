@@ -39,8 +39,8 @@ if (!fpid) {
 } else {
   console.log("🔄 既存 FPID Cookie を更新:", fpid);
 }
-// 有効期限を 5年（365日×5年）に延長
-setCookie(cookieName, fpid, 365 * 5);
+// 有効期限を 10年（365日×10年）に延長
+setCookie(cookieName, fpid, 365 * 10);
 
 // === 2. Alloy の設定・初期フロー ===
 alloy("configure", {
