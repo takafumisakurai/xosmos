@@ -16,7 +16,7 @@
         $arr_cookie_options = array (
         'expires' => time() + 60*60*24*30*13,
         'path' => '/',
-        'domain' => 'sakura.ne.jp', // ここは各ウェブサイトのドメインに変更する
+        'domain' => 'takafumisakurai.github.io', // ここは各ウェブサイトのドメインに変更する
         'secure' => false, // https通信のみCookieを送信する場合は「True」にしておく
         'httponly' => true,
         'samesite' => 'lax'
@@ -30,7 +30,7 @@
         $arr_cookie_options = array (
         'expires' => time() + 60*60*24*30*13,
         'path' => '/',
-        'domain' => 'sakura.ne.jp',
+        'domain' => 'takafumisakurai.github.io',
         'secure' => false,
         'httponly' => true,
         'samesite' => 'lax'
