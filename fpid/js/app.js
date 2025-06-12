@@ -15,9 +15,7 @@ function setCookie(name, value, days) {
     d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
     expires = ";expires=" + d.toUTCString();
   }
-  // Secure 属性は HTTPS サイトなら付与
   const secure = location.protocol === "https:" ? ";secure" : "";
-  // SameSite=Lax とパスは必須
   document.cookie = name + "=" + value + expires + ";path=/;samesite=lax" + secure;
 }
 
@@ -29,7 +27,9 @@ function getCookie(name) {
 
 // === 1. FPID Cookie の発行／更新 ===
 const datastreamId = "f02971c1-8486-4544-9363-73dd8bd0e716";
-const cookieName = `s_fpid`;  // Data Stream 側で同じ名前を指定すること
+// UI で Cookie 名を「s_fpid」に変更している場合は下記。デフォルト名を使う場合はコメントアウトしてください。
+// const cookieName = `__${datastreamId}_device_id`;
+const cookieName = `s_fpid`;
 
 let fpid = getCookie(cookieName);
 if (!fpid) {
@@ -39,13 +39,18 @@ if (!fpid) {
 } else {
   console.log("🔄 既存 FPID Cookie を更新:", fpid);
 }
-// 1年（30日×13）で再設定／更新
-setCookie(cookieName, fpid, 30 * 13);
+// 有効期限を 5年（365日×5年）に延長
+setCookie(cookieName, fpid, 365 * 5);
 
-// === 2. Alloy の設定・呼び出し ===
+// === 2. Alloy の設定・初期フロー ===
 alloy("configure", {
   datastreamId: "f02971c1-8486-4544-9363-73dd8bd0e716",
   orgId:        "709F1DFC5B75373A0A495C41@AdobeOrg"
+});
+
+// ページロード時に一度 sendEvent を投げる
+alloy("sendEvent", { xdm: {} }).then(() => {
+  console.log("初回 sendEvent 完了（FPID Cookie がここで発行される）");
 });
 
 document.getElementById("checkFpid").addEventListener("click", async () => {
