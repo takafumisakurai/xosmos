@@ -1,7 +1,6 @@
 // === 0. ユーティリティ関数 ===
 // GUID v4 生成
 function uuidv4() {
-  // RFC4122 準拠の UUIDv4 を返す
   return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
     (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4))).toString(16)
   );
@@ -27,13 +26,10 @@ function getCookie(name) {
 
 // === 1. FPID Cookie の発行／更新 ===
 const datastreamId = "f02971c1-8486-4544-9363-73dd8bd0e716";
-// UI で Cookie 名を「s_fpid」に変更している場合は下記。デフォルト名を使う場合はコメントアウトしてください。
-// const cookieName = `__${datastreamId}_device_id`;
 const cookieName = `s_fpid`;
 
 let fpid = getCookie(cookieName);
 if (!fpid) {
-  // 未発行なら新規生成
   fpid = uuidv4();
   console.log("🚀 新規 FPID Cookie を設定:", fpid);
 } else {
@@ -63,7 +59,6 @@ document.getElementById("checkFpid").addEventListener("click", async () => {
     const idResp = await alloy("getIdentity");
     console.log("◀ getIdentity 完了／identity:", idResp.identity);
 
-    // 画面にも表示
     document.getElementById("result").textContent =
       JSON.stringify({
         cookieGenerated: fpid,
