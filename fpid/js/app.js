@@ -58,6 +58,23 @@ document.getElementById("checkFpid").addEventListener("click", async () => {
     console.log("▶ getIdentity 開始");
     const idResp = await alloy("getIdentity");
     console.log("◀ getIdentity 完了／identity:", idResp.identity);
+    console.log("▶ FPID API リクエスト開始");
+    fetch("https://api.manjiro.net/id", {
+      method: "GET",
+      mode: "no-cors",
+      credentials: 'include',
+      headers: {
+        'Cache-Control': 'no-store'
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("[fpid] finished fpid request", data);
+        if ("_satellite" in window) {
+          console.log("[fpid] fired Tags event: finishFPID");
+          _satellite.track("finishFPID");
+        }
+      });
 
     document.getElementById("result").textContent =
       JSON.stringify({
