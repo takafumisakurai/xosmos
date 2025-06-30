@@ -26,7 +26,7 @@ function getCookie(name) {
 
 // === 1. FPID Cookie の発行／更新 ===
 const datastreamId = "f02971c1-8486-4544-9363-73dd8bd0e716";
-const cookieName = `tsakurai_fpid`;
+const cookieName = `s_fpid`;
 
 let fpid = getCookie(cookieName);
 if (!fpid) {
